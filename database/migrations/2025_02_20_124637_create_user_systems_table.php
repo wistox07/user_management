@@ -14,7 +14,13 @@ return new class extends Migration
         Schema::create('user_systems', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users")->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignId("system_id")->constrained("systems")->onUpdate("cascade")->onDelete("cascade");
+            $table->integer("status");
+            $table->foreignId("created_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignId("updated_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignId("deleted_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
             $table->timestamps();
+            $table->timestamp('delete_at')->nullable();
         });
     }
 
