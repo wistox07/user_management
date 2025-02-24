@@ -11,23 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sessions', function (Blueprint $table) {
+
+
+        Schema::create('system_roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("user_system_id")->constrained("user_systems")->onDelete("cascade")->onUpdate("cascade");
-            $table->string("ip_adress");
-            $table->string("user_agent")->nullable();
-            $table->text("auth_token")->nullable();
+            $table->foreignId("role_id")->constrained("roles")->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignId("system_id")->constrained("systems")->onUpdate("cascade")->onDelete("cascade");
             $table->integer("status");
             $table->foreignId("created_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
             $table->foreignId("updated_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
             $table->foreignId("deleted_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->rememberToken();
             $table->timestamps();
             $table->timestamp('delete_at')->nullable();
-            $table->timestamp("logout_at")->nullable();
         });
-
-
     }
 
     /**
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('system_roles');
     }
 };
