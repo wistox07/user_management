@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('login_attempts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("user_system_id")->constrained("user_systems")->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignId("user_system_role_id")->constrained("user_system_roles")->onUpdate("cascade")->onDelete("cascade");
             $table->string("fail_password");
             $table->string("ip_adress");
             $table->string("user_agent")->nullable();

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("user_system_id")->constrained("user_systems")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignId("user_system_role_id")->constrained("user_system_roles")->onDelete("cascade")->onUpdate("cascade");
             $table->string("ip_adress");
             $table->string("user_agent")->nullable();
             $table->text("auth_token")->nullable();

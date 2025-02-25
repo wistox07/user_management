@@ -7,9 +7,9 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\System;
-use App\Models\UserSystem;
 use App\Models\Role;
 use App\Models\SystemRole;
+use App\Models\UserSystemRole;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -114,7 +114,7 @@ class DatabaseSeeder extends Seeder
         /*
         Cuando se logea agrega datos de su perfil
         */
-        UserSystem::factory()->create([
+        UserSystemRole::factory()->create([
             "user_id" => $adminUser->id,
             "system_id" => $principalSystem->id,
             "role_id" => $adminRole->id,
@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        /*
+        
         User::factory(10)->create([
             'created_by' => $adminUser->id,
         ])->each(function ($user) use ($adminUser){
@@ -135,6 +135,6 @@ class DatabaseSeeder extends Seeder
                 "created_by" => $adminUser->id
             ]);
         });
-        */
+        
     }
 }

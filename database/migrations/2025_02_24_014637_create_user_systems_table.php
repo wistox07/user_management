@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_systems', function (Blueprint $table) {
+        Schema::create('user_system_roles', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users")->onUpdate("cascade")->onDelete("cascade");
             $table->foreignId("system_id")->constrained("systems")->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignId("role_id")->constrained("roles")->onUpdate("cascade")->onDelete("cascade");
             $table->integer("status");
             $table->foreignId("created_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
             $table->foreignId("updated_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
