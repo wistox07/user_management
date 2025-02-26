@@ -33,10 +33,14 @@ class AuthController extends Controller
                 "message_detail" => $validator->errors()->all() 
             ],400);
         }
+        $systemId = $request->system_id;
 
         try{
             $user = User::where("username", $request->username)
             ->where("status", 1)
+            ->whereHas("systems", function($query) use ($systemId){
+                $query->where("systems.id", $systemId);
+            })
             ->first();
 
             if(!$user){
@@ -47,6 +51,7 @@ class AuthController extends Controller
                 ],400); 
             }
 
+
             if(!Hash::check($request->password, $user->password)){
                 return response()->json([
                     "error" => true,
@@ -54,6 +59,9 @@ class AuthController extends Controller
                     "message_detail" => ""
                 ],400); 
             }
+
+            $userSystemRoleId = $user->systems()->first()->pivot->id;
+            dd($userSystemRoleId);
 
             $token = JWTAuth::fromUser($user);
             

@@ -51,4 +51,15 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    //Modelo a relacionar
+    //Tabla a relacionar
+    //llave foranea del modelo actual
+    //llave foranea del modelo relacionado
+    public function systems(){
+        return $this->belongsToMany(System::class, "user_system_roles","user_id","system_id")
+        ->withPivot('role_id','id');
+    }
+
+
 }
