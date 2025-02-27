@@ -129,10 +129,20 @@ class DatabaseSeeder extends Seeder
         
         User::factory(10)->create([
             'created_by' => $adminUser->id,
-        ])->each(function ($user) use ($adminUser){
+        ])->each(function ($user) use ($adminUser, $principalSystem, $adminRole ){
             Profile::factory()->create([
                 "user_id" => $user->id,
                 "created_by" => $adminUser->id
+            ]);
+            UserSystemRole::factory()->create([
+                "user_id" => $user->id,
+                "system_id" => $principalSystem->id,
+                "role_id" => $adminRole->id,
+                "status" => 1,
+                "created_by" => $adminUser->id,
+                'updated_by' => null,
+                'deleted_by' => null,
+                'delete_at' => null
             ]);
         });
         

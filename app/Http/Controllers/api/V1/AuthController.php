@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Session;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -33,10 +34,15 @@ class AuthController extends Controller
                 "message_detail" => $validator->errors()->all() 
             ],400);
         }
-        $systemId = $request->system_id;
+
+        $userName = $request->input("username");
+        $password = $request->input("password");
+        $systemId = $request->input("system_id");
+        $ipAdress = $request->ip();
+        $userAgent = $request->header("User-Agent");
 
         try{
-            $user = User::where("username", $request->username)
+            $user = User::where("username", $userName)
             ->where("status", 1)
             ->whereHas("systems", function($query) use ($systemId){
                 $query->where("systems.id", $systemId);
@@ -51,8 +57,7 @@ class AuthController extends Controller
                 ],400); 
             }
 
-
-            if(!Hash::check($request->password, $user->password)){
+            if(!Hash::check($password, $user->password)){
                 return response()->json([
                     "error" => true,
                     "message" => "Credenciales incorrectas",
@@ -61,9 +66,17 @@ class AuthController extends Controller
             }
 
             $userSystemRoleId = $user->systems()->first()->pivot->id;
-            dd($userSystemRoleId);
-
+    
             $token = JWTAuth::fromUser($user);
+
+
+            $session = new Session();
+            $session->ip_adress = $ipAdress;
+            $session->user_agent = $userAgent;
+            $session->auth_token = $token;
+            $session->status = 1;
+            $session->created_by;
+          
             
             return response()->json([
                 "success" => true,

@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string("url");
             $table->string("description")->nullable();
             $table->integer("status");
-            $table->foreignId("created_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreignId("updated_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreignId("deleted_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignId("created_by")->nullable()->constrained("user_system_roles")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignId("updated_by")->nullable()->constrained("user_system_roles")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignId("deleted_by")->nullable()->constrained("user_system_roles")->onDelete("cascade")->onUpdate("cascade");
             $table->timestamps();
             $table->timestamp('delete_at')->nullable();
 
