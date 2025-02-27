@@ -18,9 +18,6 @@ return new class extends Migration
             $table->string("phone_number")->nullable();
             $table->integer("status");
             $table->string('password');
-            $table->foreignId("created_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignId("updated_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignId("deleted_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
             $table->timestamps();
             $table->timestamp('delete_at')->nullable();
         });

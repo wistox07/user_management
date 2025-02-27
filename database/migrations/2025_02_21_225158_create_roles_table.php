@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("short_name")->nullable();
+            $table->string("identifier_code");
             $table->string("description")->nullable();
             $table->integer("status");
-            $table->foreignId("created_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignId("updated_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignId("deleted_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
             $table->timestamps();
             $table->timestamp('delete_at')->nullable();
-
         });
     }
 

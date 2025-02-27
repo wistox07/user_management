@@ -20,9 +20,6 @@ return new class extends Migration
             $table->date("birth");
             $table->enum('gender', ['m', 'f']); // 'm' para masculino, 'f' para femenino
             $table->integer("status");
-            $table->foreignId("created_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreignId("updated_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreignId("deleted_by")->nullable()->constrained("users")->onDelete("cascade")->onUpdate("cascade");
             $table->timestamps();
             $table->timestamp('delete_at')->nullable();
         });

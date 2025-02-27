@@ -18,9 +18,6 @@ return new class extends Migration
             $table->string("ip_adress");
             $table->string("user_agent")->nullable();
             $table->integer("status");
-            $table->foreignId("created_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignId("updated_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignId("deleted_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
             $table->rememberToken();
             $table->timestamps();
             $table->timestamp('delete_at')->nullable();

@@ -18,16 +18,11 @@ return new class extends Migration
             $table->string("user_agent")->nullable();
             $table->text("auth_token")->nullable();
             $table->integer("status");
-            $table->foreignId("created_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignId("updated_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignId("deleted_by")->nullable()->constrained("users")->onUpdate("cascade")->onDelete("cascade");
             $table->rememberToken();
             $table->timestamps();
             $table->timestamp('delete_at')->nullable();
             $table->timestamp("logout_at")->nullable();
         });
-
-
     }
 
     /**
