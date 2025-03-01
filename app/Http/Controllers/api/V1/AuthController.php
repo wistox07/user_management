@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Session;
 use App\Models\User;
+use App\Models\UserSystemRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -54,15 +55,24 @@ class AuthController extends Controller
 
             select `systems`.*, `user_system_roles`.`user_id` as `pivot_user_id`, `user_system_roles`.`system_id` as `pivot_system_id`, `user_system_roles`.`role_id` as `pivot_role_id`, `user_system_roles`.`id` as `pivot_id` from `systems` inner join `user_system_roles` on `systems`.`id` = `user_system_roles`.`system_id` where `user_system_roles`.`user_id` in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12) and `systems`.`id` = ?
             */
+            /*
             $newUser = User::where("username", $userName)
                 ->with(["systems" => function ($query) use ($systemId) {
                     $query->where('systems.id', $systemId);
                 }])
                 ->get();
+                */
 
             //dd($newUser);
 
-
+            $newUser = UserSystemRole::whereHas('user', function ($query) use ($userName) {
+                $query->where('username', $userName);
+            })
+                ->whereHas('system', function ($query) use ($systemId) {
+                    $query->where('id', $systemId);
+                })
+                ->with(['user', 'system', 'role'])
+                ->get();
 
 
             //dd(DB::getQueryLog());

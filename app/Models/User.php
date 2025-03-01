@@ -63,4 +63,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(System::class, "user_system_roles", "user_id", "system_id")
             ->withPivot('role_id', 'id', 'user_id', 'role_id');
     }
+
+    public function userSystemRoles()
+    {
+        return $this->hasMany(UserSystemRole::class, "user_id", "id");
+    }
 }
