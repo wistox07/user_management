@@ -46,69 +46,29 @@ class AuthController extends Controller
 
         try {
 
-            DB::enableQueryLog();
-            //where devuelve todos los usuarios , tengan o no tengan relación en la tabla intermedia
-            //whereHas duelve los usuarios que tengan relacion
+            //DB::enableQueryLog();
 
-            /*
-            select * from `users`
-
-            select `systems`.*, `user_system_roles`.`user_id` as `pivot_user_id`, `user_system_roles`.`system_id` as `pivot_system_id`, `user_system_roles`.`role_id` as `pivot_role_id`, `user_system_roles`.`id` as `pivot_id` from `systems` inner join `user_system_roles` on `systems`.`id` = `user_system_roles`.`system_id` where `user_system_roles`.`user_id` in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12) and `systems`.`id` = ?
-            */
-            /*
-            $newUser = User::where("username", $userName)
-                ->with(["systems" => function ($query) use ($systemId) {
-                    $query->where('systems.id', $systemId);
-                }])
-                ->get();
-                */
-
-            //dd($newUser);
-
-            $newUser = UserSystemRole::whereHas('user', function ($query) use ($userName) {
-                $query->where('username', $userName);
+            //first devuelve un objeto UserSystemRole si hay datos y null , si no hay datos
+            //get devuelve una coleccion de UserSystemRole si no hay datos lo que hace que sea true 
+            $userSystemRole = UserSystemRole::with(["user","role","system"])
+            ->whereHas("user", function ($query) use ($userName) {
+                $query->where("username", $userName)
+                ->where("status", 1);
             })
-                ->whereHas('system', function ($query) use ($systemId) {
-                    $query->where('id', $systemId);
-                })
-                ->with(['user', 'system', 'role'])
-                ->get();
+            ->where("system_id", $systemId)
+            ->where("status", 1)
+            ->first();
 
-
-            //dd(DB::getQueryLog());
-            /*
-            en este caso hace un select para un usuario determinado
-
-            select * from `users` where exists (select * from `systems` inner join `user_system_roles` on `systems`.`id` = `user_system_roles`.`system_id` where `users`.`id` = `user_system_roles`.`user_id` and `systems`.`id` = ?)
-
-            select `systems`.*, `user_system_roles`.`user_id` as `pivot_user_id`, `user_system_roles`.`system_id` as `pivot_system_id`, `user_system_roles`.`role_id` as `pivot_role_id`, `user_system_roles`.`id` as `pivot_id` from `systems` inner join `user_system_roles` on `systems`.`id` = `user_system_roles`.`system_id` where `user_system_roles`.`user_id` in (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
-            */
-            /*
-            $newUser = User::with('systems')
-                ->whereHas('systems', function ($query) use ($systemId) {
-                    $query->where('systems.id', $systemId);
-                })
-                ->get();
-            */
-
-            return response()->json([
-                $newUser
-            ]);
-
-            $user = User::where("username", $userName)
-                ->where("status", 1)
-                ->whereHas("systems", function ($query) use ($systemId) {
-                    $query->where("systems.id", $systemId);
-                })
-                ->first();
-
-            if (!$user) {
+            
+            if(!$userSystemRole){
                 return response()->json([
                     "error" => true,
                     "message" => "El usuario no existe",
                     "message_detail" => ""
                 ], 400);
             }
+
+            $user = $userSystemRole->user;
 
             if (!Hash::check($password, $user->password)) {
                 return response()->json([
@@ -118,8 +78,6 @@ class AuthController extends Controller
                 ], 400);
             }
 
-            $userSystemRoleId = $user->systems()->first()->pivot->id;
-            dd($userSystemRoleId);
             $token = JWTAuth::fromUser($user);
 
 
